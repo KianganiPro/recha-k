@@ -1,0 +1,4 @@
+Contact: mailto:kiangani.pro@gmail.com
+Expires: 2027-11-15T04:34:56.239Z
+Preferred-Languages: fr, en
+Canonical: https://recha-k.com/.well-known/security.txt

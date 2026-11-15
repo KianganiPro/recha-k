@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Les marqueurs entre doubles accolades sont remplis au build (vite.config.js) depuis config/site.js, seoConfig.js et theme.js : ne pas les remplacer à la main. -->
+    <title>{{TITLE}}</title>
+    <meta name="description" content="{{DESCRIPTION}}" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="{{URL}}/" />
+    <meta name="theme-color" content="{{THEME_COLOR}}" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Open Graph / réseaux sociaux (image : 1200×630, < 300 Ko) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="{{LOCALE}}" />
+    <meta property="og:site_name" content="{{SITE_NAME}}" />
+    <meta property="og:title" content="{{TITLE}}" />
+    <meta property="og:description" content="{{DESCRIPTION}}" />
+    <meta property="og:url" content="{{URL}}/" />
+    <meta property="og:image" content="{{URL}}/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="{{SITE_NAME}} — portfolio" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{TITLE}}" />
+    <meta name="twitter:description" content="{{DESCRIPTION}}" />
+    <meta name="twitter:image" content="{{URL}}/og-image.jpg" />
+
+    <!-- Une seule police préchargée : celle du premier écran (préchargeur, navigation, bandeau du hero). -->
+    <link rel="preload" href="/fonts/montserrat-variable.woff2" as="font" type="font/woff2" crossorigin />
+
+    <style>{{THEME_CSS}}</style>
+    <script type="application/ld+json">{{JSON_LD}}</script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <p>{{SITE_NAME}} — portfolio. Enable JavaScript to browse the projects, or email {{EMAIL}}.</p>
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

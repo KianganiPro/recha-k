@@ -1,0 +1,1320 @@
+@import "tailwindcss";
+
+/*
+ * Les valeurs (couleurs, courbes, durées, polices) viennent de theme.js :
+ * vite.config.js injecte ses variables CSS (--c-*, --ease-*, --dur-*, --f-*,
+ * --t-*) dans index.html. Ce fichier ne contient aucune teinte en dur.
+ *
+ * --fond / --encre : fond et encre « vivants », changés en JS au survol d'un
+ * projet et sur sa page (fond.js).
+ */
+@theme inline {
+  --color-fond: var(--fond);
+  --color-encre: var(--encre);
+  --font-display: var(--f-display);
+  --font-lecture: var(--f-lecture);
+  --font-sans: var(--f-base);
+}
+
+/* ---------------------------------------------------------------- */
+/* Polices auto-hébergées (sous-ensemble latin, U+202F ajouté)        */
+/* ---------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("/fonts/montserrat-variable.woff2") format("woff2");
+  font-weight: 100 900; /* fonte variable : une déclaration pour toute la famille */
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lato";
+  src: url("/fonts/lato-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lato";
+  src: url("/fonts/lato-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------- */
+/* Base                                                              */
+/* ---------------------------------------------------------------- */
+
+:root {
+  --franja: 6.5rem; /* bande réservée à la nav et au pied */
+  --gouttiere: 2rem; /* marge latérale de l'intro d'origine */
+  --ui: clamp(0.95rem, 0.6rem + 0.6vw, 1.15rem); /* nav, pied */
+}
+
+@media (max-width: 767px) {
+  :root {
+    --gouttiere: 1.25rem;
+    --franja: 5rem;
+  }
+}
+
+html {
+  background: var(--fond);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--encre);
+  font-family: var(--f-base);
+  font-size: var(--t-corps);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background-color var(--dur-slow) var(--ease-in-out),
+    color var(--dur-slow) var(--ease-in-out);
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  /* currentColor = l'encre du moment : l'anneau reste visible sur fond clair comme sur fond foncé */
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.lien-evitement {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 60;
+  padding: 0.5rem 1rem;
+  background: var(--encre);
+  color: var(--fond);
+  translate: 0 -200%;
+}
+.lien-evitement:focus {
+  translate: 0 0;
+}
+
+.cadre {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  /* clip et non hidden : hidden casserait un éventuel position: sticky */
+  overflow-x: clip;
+}
+
+/* ---------------------------------------------------------------- */
+/* Lettres et mots sous cache                                        */
+/* ---------------------------------------------------------------- */
+
+.masque {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.lettre,
+.mot,
+.anime-lettre,
+.anime-mot {
+  display: inline-block;
+}
+
+.anime-lettre,
+.anime-mot {
+  animation: monte var(--dur-scene) var(--ease-revele) var(--d, 0s) both;
+}
+
+@keyframes monte {
+  from {
+    translate: 0 100%;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes sort {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -100%;
+  }
+}
+
+/* Entrée en fondu des blocs non découpés (méta, carrousel, formulaire). */
+.apparait {
+  animation: fondu var(--dur-slow) var(--ease-soft) var(--d, 0s) both;
+}
+@keyframes fondu {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+  }
+}
+
+/* Transition de page : la page quittée fait remonter ses lettres. */
+[data-transition="sortie"] main .lettre,
+[data-transition="sortie"] main .mot,
+[data-transition="sortie"] main .anime-mot {
+  animation: sort var(--dur-base) var(--ease-rideau) calc(var(--r, 0) * 18ms) both;
+}
+[data-transition="sortie"] main .apparait {
+  animation: efface 400ms var(--ease-out) both;
+}
+@keyframes efface {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Préchargeur                                                       */
+/* ---------------------------------------------------------------- */
+
+.prechargeur {
+  position: fixed;
+  inset: 0;
+  height: 100svh;
+  z-index: 50;
+  overflow: hidden;
+  background: var(--c-fond-encre);
+  color: var(--c-texte-inverse);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  will-change: clip-path;
+  animation: rideau var(--dur-scene) var(--ease-rideau) var(--d-rideau) forwards;
+}
+@keyframes rideau {
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  }
+}
+
+.prechargeur__images {
+  position: absolute;
+  inset: 0;
+}
+
+.prechargeur__img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(250px, 42vw);
+  aspect-ratio: 5 / 6;
+  translate: -50% -50%;
+  rotate: var(--rot);
+  scale: 0;
+  clip-path: polygon(20% 20%, 80% 20%, 80% 80%, 20% 80%);
+  will-change: scale, clip-path;
+  /* deux animations : la sortie n'a pas de remplissage arrière, l'entrée
+     tient donc l'image ouverte jusqu'au départ de la sortie */
+  animation:
+    img-entre var(--dur-scene) var(--ease-revele) var(--d-in) forwards,
+    img-sort var(--dur-scene) var(--ease-rideau) var(--d-out) forwards;
+}
+.prechargeur__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@keyframes img-entre {
+  to {
+    scale: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+@keyframes img-sort {
+  from {
+    scale: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  to {
+    scale: 0;
+    clip-path: polygon(20% 20%, 80% 20%, 80% 80%, 20% 80%);
+  }
+}
+
+.prechargeur__entete {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  font-size: clamp(1.5rem, 7.5vw, 12rem);
+}
+.prechargeur__titre {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.prechargeur .anime-lettre {
+  animation:
+    monte var(--dur-scene) var(--ease-rideau) var(--d) both,
+    sort 750ms var(--ease-rideau) calc(var(--d-sortie) + var(--r) * var(--pas-sortie)) forwards;
+}
+.prechargeur__compteur {
+  position: absolute;
+  top: 0.05em;
+  left: calc(100% + 0.15em);
+  overflow: hidden;
+  font-size: clamp(1rem, 1.5vw, 2rem);
+}
+.prechargeur__compteur p {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 500;
+  line-height: 1.28;
+  font-variant-numeric: tabular-nums;
+  animation:
+    monte var(--dur-scene) var(--ease-rideau) var(--d-compteur) both,
+    sort 750ms var(--ease-rideau) var(--d-sortie) forwards;
+}
+
+/* ---------------------------------------------------------------- */
+/* Navigation et pied                                                */
+/* ---------------------------------------------------------------- */
+
+.nav,
+.pied {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--gouttiere);
+  font-family: var(--f-display);
+  font-size: var(--ui);
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+}
+.nav {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 10;
+  align-items: flex-start;
+}
+.nav__lien {
+  color: inherit;
+  text-decoration: none;
+}
+.nav__liens {
+  display: flex;
+  gap: 2rem;
+}
+
+/* Hamburger : mobile uniquement (< 768 px) */
+.nav__burger {
+  position: relative;
+  display: none;
+  width: 44px; /* cible tactile */
+  height: 44px;
+  margin: -12px -10px 0 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.nav__burger-trait {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  height: 2px;
+  background: currentColor;
+  transition: translate var(--dur-base) var(--ease-in-out), rotate var(--dur-base) var(--ease-in-out);
+}
+.nav__burger-trait:nth-of-type(2) {
+  top: 17px;
+}
+.nav__burger-trait:nth-of-type(3) {
+  top: 25px;
+}
+.nav[data-menu="ouvert"] .nav__burger-trait:nth-of-type(2) {
+  translate: 0 4px;
+  rotate: 45deg;
+}
+.nav[data-menu="ouvert"] .nav__burger-trait:nth-of-type(3) {
+  translate: 0 -4px;
+  rotate: -45deg;
+}
+@media (max-width: 767px) {
+  .nav__liens {
+    display: none;
+  }
+  .nav__burger {
+    display: block;
+  }
+}
+
+/* Menu mobile : rideau plein écran, sous le logo et le bouton */
+.menu-mobile {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* liens en haut, pied en bas */
+  padding: calc(var(--franja) + 1rem) var(--gouttiere) var(--gouttiere);
+  background: var(--fond);
+  visibility: hidden;
+  clip-path: inset(0 0 100% 0);
+  transition:
+    clip-path var(--dur-slow) var(--ease-rideau),
+    visibility 0s linear var(--dur-slow);
+}
+.menu-mobile[data-ouvert] {
+  visibility: visible;
+  clip-path: inset(0 0 0 0);
+  transition:
+    clip-path var(--dur-slow) var(--ease-rideau),
+    visibility 0s;
+}
+.menu-mobile__liens {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.menu-mobile__lien {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  font-size: clamp(2.5rem, 13vw, 4.5rem);
+  letter-spacing: -0.035em;
+}
+.menu-mobile__pied {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.menu-mobile__reseaux {
+  display: flex;
+  gap: 0.75rem;
+}
+.menu-mobile__contact {
+  color: inherit;
+  text-decoration: none;
+}
+html[data-menu="ouvert"] body {
+  overflow: hidden; /* la page ne défile pas sous le menu */
+}
+@media (min-width: 768px) {
+  .menu-mobile {
+    display: none;
+  }
+}
+.pied {
+  align-items: flex-end;
+  margin-top: auto;
+}
+.pied__emplacement {
+  margin: 0;
+  min-width: 1px;
+}
+.pied__copyright {
+  margin: 0;
+  font-weight: 600; /* « gras moyen » demandé par le client */
+}
+.pied__droite {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+}
+.pied__mentions {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 400;
+}
+.pied__mentions:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.pied__reseaux {
+  display: flex;
+  gap: 0.75rem;
+}
+.reseau {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-end;
+  color: inherit;
+  text-decoration: none;
+}
+.reseau::after {
+  /* zone cliquable élargie (≈ 44 px au doigt) sans décaler l'alignement visuel */
+  content: "";
+  position: absolute;
+  inset: -12px;
+}
+.reseau__icone {
+  display: block;
+  width: 1.25em;
+  height: 1.25em;
+  /* le glyphe officiel sert de masque : l'icône prend la couleur de l'encre */
+  background: currentColor;
+  -webkit-mask: var(--icone) center / contain no-repeat;
+  mask: var(--icone) center / contain no-repeat;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.reseau:hover .reseau__icone {
+  opacity: 0.7;
+}
+
+/* ---------------------------------------------------------------- */
+/* Accueil — liste des projets                                       */
+/* ---------------------------------------------------------------- */
+
+.accueil {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--franja) 0 0; /* pas de gouttière : le bandeau va d'un bord à l'autre */
+}
+.accueil:focus {
+  outline: none;
+}
+
+.liste__indice {
+  /* Tous les projets tiennent dans la hauteur de l'écran : la taille est
+     bornée par (hauteur disponible) / (nombre de lignes × hauteur d'une ligne). */
+  --reserve: calc(var(--franja) * 2 + 1rem);
+  --titre-liste: clamp(1.5rem, min(0.8rem + 4.2vw, calc((100svh - var(--reserve)) / (var(--n) * 1.5))), 6.6rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: max-content;
+  max-width: 100%;
+  font-size: var(--titre-liste);
+}
+
+.ligne {
+  position: relative;
+  display: flex;
+  width: fit-content; /* les vignettes s'ouvrent juste après le type, pas au bout de la plus longue ligne */
+  max-width: 100%;
+  align-items: flex-start;
+  gap: 0.4rem;
+  padding: 0.1em 0;
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--f-display);
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: -0.035em;
+  transition: opacity var(--dur-base) var(--ease-soft);
+}
+
+.ligne__n,
+.ligne__type {
+  flex-shrink: 0;
+  padding-top: 0.6em;
+  font-family: var(--f-lecture);
+  font-size: max(0.75rem, 0.2235em);
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Le type peut passer sur deux lignes sur petit écran plutôt que déborder. */
+.ligne__type {
+  flex-shrink: 1;
+}
+
+/* Les autres lignes s'effacent quand une ligne est survolée. */
+.liste__indice:has(.ligne:is(:hover, :focus-visible)) .ligne:not(:is(:hover, :focus-visible)) {
+  opacity: 0.3;
+}
+
+/* Roulement des lettres : une copie (text-shadow) attend 1.3em plus bas,
+   sous le cache ; au survol tout remonte d'1.3em, lettre après lettre. */
+.ligne .lettre {
+  text-shadow: 0 1.3em currentColor;
+  transition: transform 700ms var(--ease-soft);
+  transition-delay: calc(var(--k, 0) * 16ms);
+}
+@media (hover: hover) {
+  .ligne:hover .lettre {
+    transform: translateY(-1.3em);
+  }
+}
+.ligne:focus-visible .lettre {
+  transform: translateY(-1.3em);
+}
+/* En sortie de page, la copie remonterait sous le cache à la place de la
+   lettre : on la retire sur les lignes non survolées (sur la ligne survolée,
+   c'est justement la copie qui est visible, elle sort par le haut). */
+[data-transition="sortie"] .ligne:not(:hover, :focus-visible) .lettre {
+  text-shadow: none;
+}
+
+/* Vignettes : deux visuels s'ouvrent à droite du nom, écrans larges et souris uniquement. */
+.ligne__vignettes {
+  display: none;
+}
+@media (hover: hover) and (min-width: 1024px) {
+  .ligne__vignettes {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    display: flex;
+    gap: 0.1em;
+    padding-left: 0.3em;
+    translate: 0 -50%;
+    pointer-events: none;
+  }
+}
+.vignette {
+  display: block;
+  width: 1.65em;
+  height: 1.1em;
+  overflow: hidden;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 700ms var(--ease-in-out) calc(var(--i, 0) * 70ms);
+}
+.vignette img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scale: 1.3;
+  transition: scale 900ms var(--ease-soft) calc(var(--i, 0) * 70ms);
+}
+.ligne:hover .vignette {
+  clip-path: inset(0 0 0 0);
+}
+.ligne:hover .vignette img {
+  scale: 1;
+}
+[data-transition="sortie"] .ligne .vignette {
+  clip-path: inset(0 0 100% 0); /* les vignettes se referment vers le haut avec les lettres */
+}
+
+.liste-vide {
+  font-family: var(--f-display);
+  font-size: var(--t-h3);
+}
+
+/* ---------------------------------------------------------------- */
+/* Titres et textes communs                                          */
+/* ---------------------------------------------------------------- */
+
+.titre-geant {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: var(--t-h1);
+  line-height: 1.28;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.etiquette {
+  margin: 0 0 0.5rem;
+  font-family: var(--f-lecture);
+  font-size: var(--t-petit);
+  line-height: 1.28;
+}
+
+.lien-souligne {
+  color: inherit;
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  transition: background-size var(--dur-base) var(--ease-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+}
+.lien-souligne:hover {
+  background-size: 0 1px;
+  background-position: 100% 100%;
+}
+
+/* ---------------------------------------------------------------- */
+/* Page projet                                                       */
+/* ---------------------------------------------------------------- */
+
+.projet,
+.contact,
+.mentions,
+.introuvable {
+  flex: 1;
+  padding: calc(var(--franja) + 1.5rem) var(--gouttiere) 0;
+}
+main:focus {
+  outline: none;
+}
+
+.projet__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 3rem;
+  margin: 2rem 0 0;
+  font-size: var(--t-petit);
+}
+.projet__meta dt {
+  font-weight: 700;
+  font-size: var(--t-etiquette);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.projet__meta dd {
+  margin: 0.35rem 0 0;
+}
+.projet__liens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.projet__description {
+  max-width: 40rem;
+  margin: 1.5rem 0 0;
+  font-family: var(--f-lecture);
+  line-height: 1.6;
+}
+
+.carrousel {
+  margin-top: 3rem;
+}
+.carrousel__scene {
+  position: relative;
+  height: clamp(20rem, 72svh, 56rem);
+  touch-action: pan-y; /* le défilement vertical reste possible au doigt */
+  user-select: none;
+}
+.carrousel__scene[data-multiple] {
+  cursor: pointer;
+}
+.diapo {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+}
+.diapo[data-etat="initial"],
+.diapo[data-etat="actif"] {
+  visibility: visible;
+  z-index: 2;
+}
+/* La précédente reste dessous le temps du volet, puis disparaît
+   (sinon une image plus large déborderait autour de la nouvelle). */
+.diapo[data-etat="precedent"] {
+  visibility: visible;
+  z-index: 1;
+  animation: masquer 0s linear 900ms forwards;
+}
+@keyframes masquer {
+  to {
+    visibility: hidden;
+  }
+}
+.diapo[data-etat="actif"] {
+  animation: volet-suivant 900ms var(--ease-in-out) both;
+}
+.diapo[data-etat="actif"][data-sens="precedent"] {
+  animation-name: volet-precedent;
+}
+@keyframes volet-suivant {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes volet-precedent {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+.diapo[data-etat="actif"] .diapo__media {
+  animation: dezoom 1200ms var(--ease-soft) both;
+}
+@keyframes dezoom {
+  from {
+    scale: 1.12;
+  }
+}
+.diapo__media {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  background: center / cover no-repeat;
+}
+
+.carrousel__controles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  font-size: var(--t-petit);
+  font-variant-numeric: tabular-nums;
+}
+.carrousel__compteur {
+  margin: 0;
+}
+.carrousel__boutons {
+  display: flex;
+  gap: 0.25rem;
+}
+.bouton-icone {
+  display: inline-grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.suivant {
+  margin-top: 6rem;
+  padding-top: 2rem;
+  border-top: 1px solid currentColor;
+}
+.suivant__lien.ligne {
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 1.5rem;
+  font-size: var(--t-h1);
+}
+.suivant__lien .etiquette {
+  flex-basis: 100%;
+  font-size: var(--t-petit);
+  letter-spacing: 0;
+}
+.suivant__type {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--f-lecture);
+  font-size: var(--t-petit);
+  letter-spacing: 0;
+}
+.suivant__type .fleche {
+  transition: translate var(--dur-base) var(--ease-soft);
+}
+.suivant__lien:hover .suivant__type .fleche {
+  translate: 0.4rem 0;
+}
+
+/* ---------------------------------------------------------------- */
+/* Contact                                                           */
+/* ---------------------------------------------------------------- */
+
+.contact__grille {
+  display: grid;
+  gap: 3rem;
+  margin-top: 3rem;
+  padding-bottom: 3rem;
+}
+@media (min-width: 768px) {
+  .contact__grille {
+    grid-template-columns: 4fr 8fr;
+  }
+}
+.contact__intro p {
+  margin: 0 0 1rem;
+  font-family: var(--f-lecture);
+}
+.contact__email {
+  font-family: var(--f-display);
+  font-weight: 500;
+}
+
+.formulaire {
+  display: grid;
+  gap: 1.5rem;
+}
+.formulaire__ligne {
+  display: grid;
+  gap: 1.5rem;
+}
+@media (min-width: 640px) {
+  .formulaire__ligne {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.formulaire__piege {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.champ {
+  display: grid;
+  gap: 0.4rem;
+}
+.champ__label {
+  font-size: var(--t-etiquette);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.champ__facultatif {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.champ__saisie {
+  width: 100%;
+  padding: 0.6rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--encre);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  resize: vertical;
+}
+.champ__saisie:focus-visible {
+  outline-offset: 2px;
+}
+.champ__saisie[aria-invalid="true"] {
+  border-bottom-color: var(--c-etat-erreur);
+}
+.champ__erreur {
+  margin: 0;
+  color: var(--c-etat-erreur);
+  font-size: var(--t-petit);
+}
+.formulaire__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+}
+.formulaire__statut {
+  margin: 0;
+  font-size: var(--t-petit);
+}
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  padding: 0.9rem 1.75rem;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--encre);
+  color: var(--fond);
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: var(--t-petit);
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.bouton:active {
+  scale: 0.97;
+}
+.bouton--contour {
+  border: 1px solid var(--c-bordure-marquee);
+  background: transparent;
+  color: var(--encre);
+}
+.bouton:hover {
+  opacity: 0.85;
+}
+.bouton:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+/* Page 404 « glitch » (Page404.jsx) */
+.introuvable__scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  min-height: 520px;
+  padding: 3rem 0 5rem;
+  text-align: center;
+}
+.glitch {
+  position: relative;
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: clamp(5rem, 18vw, 11rem);
+  line-height: 1.28;
+  letter-spacing: -0.05em;
+  user-select: none;
+}
+.glitch__code {
+  position: relative;
+  margin: 0;
+  font: inherit;
+}
+.scramble {
+  font-variant-numeric: tabular-nums;
+}
+.glitch__fantome {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: multiply; /* fond clair : multiply (screen serait invisible) */
+  transition:
+    translate 150ms var(--ease-out),
+    opacity 150ms var(--ease-out);
+}
+.glitch__fantome--a {
+  color: var(--c-effet-glitch-a);
+}
+.glitch__fantome--b {
+  color: var(--c-effet-glitch-b);
+}
+.glitch:hover .glitch__fantome {
+  opacity: 0.7;
+}
+.glitch:hover .glitch__fantome--a {
+  translate: 3px 0;
+}
+.glitch:hover .glitch__fantome--b {
+  translate: -3px 0;
+}
+.introuvable__texte {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+}
+.introuvable__titre {
+  margin: 0;
+  font-family: var(--f-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.introuvable__description {
+  max-width: 24rem;
+  margin: 0;
+  color: var(--c-texte-secondaire);
+  font-size: var(--t-petit);
+}
+.introuvable__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.formulaire__info {
+  margin: 0;
+  font-size: var(--t-petit);
+}
+
+/* ---------------------------------------------------------------- */
+/* Mentions légales                                                  */
+/* ---------------------------------------------------------------- */
+
+.mentions__corps {
+  max-width: 48rem; /* GRILLE.conteneurEtroit : texte long */
+  padding: 2rem 0 4rem;
+  font-family: var(--f-lecture);
+  line-height: 1.6;
+}
+.mentions__corps h2 {
+  margin: 2.5rem 0 0.75rem;
+  font-family: var(--f-display);
+  font-size: var(--t-h3);
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+}
+.mentions__corps p {
+  margin: 0 0 1rem;
+}
+.mentions__liste {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+  list-style: disc; /* le reset de Tailwind retire les puces */
+}
+
+/* ---------------------------------------------------------------- */
+/* Page collection (PageProjets.jsx)                                 */
+/* ---------------------------------------------------------------- */
+
+.collection {
+  flex: 1;
+  padding: calc(var(--franja) + 1.5rem) var(--gouttiere) 3rem;
+}
+.filtre__liste {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  margin: 0 0 2.5rem;
+  padding: 0;
+  list-style: none;
+}
+.filtre__lien {
+  color: var(--c-texte-secondaire);
+  text-decoration: none;
+  font-family: var(--f-display);
+  font-size: var(--t-h3);
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.filtre__lien:hover,
+.filtre__lien[aria-current="page"] {
+  color: var(--encre);
+}
+.filtre__lien[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+.filtre__nombre {
+  margin-left: 0.2em;
+  font-family: var(--f-lecture);
+  font-size: 0.5em;
+  font-weight: 400;
+}
+
+/* Grille de cartes 3:4 — 2 colonnes, 3 dès 768 px, 4 dès 1024 px */
+.collection__grille {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 768px) {
+  .collection__grille {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem 1rem;
+  }
+}
+@media (min-width: 1024px) {
+  .collection__grille {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.carte__lien {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.carte__visuel {
+  display: block;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--c-fond-doux);
+}
+.carte__visuel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  background: center / cover no-repeat; /* LQIP */
+  transition: scale var(--dur-slow) var(--ease-soft);
+}
+.carte__lien:hover .carte__visuel img,
+.carte__lien:focus-visible .carte__visuel img {
+  scale: 1.04;
+}
+.carte__detail {
+  display: grid;
+  gap: 0.2rem;
+  padding-top: 0.75rem;
+}
+.carte__titre {
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: var(--t-corps);
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+}
+.carte__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 0.75rem;
+  color: var(--c-texte-secondaire);
+  font-size: var(--t-petit);
+}
+.collection__vide {
+  font-family: var(--f-lecture);
+}
+
+/* ---------------------------------------------------------------- */
+/* Bandeau gooey (GooeyMarquee.jsx)                                  */
+/* ---------------------------------------------------------------- */
+
+.gooey {
+  position: relative;
+  height: 1.5em;
+  overflow: hidden;
+  font-family: var(--f-display);
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: -0.03em;
+}
+.gooey__svg {
+  /* jamais masqué via display : un filtre SVG non rendu cesse de fonctionner dans Chrome */
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.gooey__couche {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+}
+/* Bandes d'encre aux extrémités : seuillées avec le texte flou, les lettres
+   s'y collent en entrant et en sortant (l'effet « gooey »). */
+.gooey[data-bords] .gooey__couche--flou {
+  background-image:
+    linear-gradient(to right, var(--encre), 1rem, transparent 50%),
+    linear-gradient(to left, var(--encre), 1rem, transparent 50%);
+}
+.gooey__piste {
+  display: flex;
+  flex-shrink: 0;
+  width: max-content;
+  white-space: nowrap;
+  will-change: transform;
+  /* deux copies identiques : à -50 % la seconde est exactement où la première commençait */
+  animation: gooey-defile var(--duree, 24s) linear infinite;
+}
+.gooey__couche--flou .gooey__piste {
+  filter: blur(0.07em);
+}
+.gooey[data-sens="droite"] .gooey__piste {
+  animation-direction: reverse;
+}
+.gooey[data-pause] .gooey__piste {
+  animation-play-state: paused;
+}
+@keyframes gooey-defile {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Hero de l'accueil (HeroAccueil.jsx)                               */
+/* ---------------------------------------------------------------- */
+
+/* Mobile : à la chaîne — le bandeau, puis la vidéo. */
+.hero {
+  display: grid;
+  align-content: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+.hero__bandeau {
+  overflow: hidden; /* cache de l'entrée du bandeau */
+  font-size: clamp(2rem, 9vw, 3.5rem);
+}
+.hero__media {
+  position: relative;
+  margin: 0 var(--gouttiere);
+}
+.hero__video {
+  margin: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--c-fond-doux);
+}
+.hero__video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Ordinateur : bandeau et vidéo dans la même case, la vidéo par-dessus. */
+@media (min-width: 768px) {
+  .hero {
+    grid-template-areas: "pile";
+    place-items: center;
+    gap: 0;
+  }
+  .hero > * {
+    grid-area: pile;
+  }
+  .hero__bandeau {
+    width: 100%;
+    font-size: clamp(4rem, 10vw, 12rem);
+  }
+  .hero__media {
+    margin: 0;
+    /* 65 % de la largeur (comme la référence), sans dépasser la hauteur disponible */
+    width: min(65vw, calc((100svh - var(--franja) * 2 - 3rem) * 16 / 9));
+  }
+}
+
+/* Première visite : apparition à la fin du rideau du préchargeur. */
+.hero[data-entree] .hero__bandeau-entree {
+  animation: monte var(--dur-scene) var(--ease-revele) var(--d, 0s) both;
+}
+.hero[data-entree] .hero__video {
+  animation: hero-video 1200ms var(--ease-revele) calc(var(--d, 0s) + 0.1s) both;
+}
+@keyframes hero-video {
+  from {
+    clip-path: inset(22% 22% 22% 22%);
+    scale: 0.85;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    scale: 1;
+  }
+}
+[data-transition="sortie"] main .hero {
+  animation: efface 400ms var(--ease-out) both;
+}
+
+/* ---------------------------------------------------------------- */
+/* Mouvement réduit — obligatoire                                    */
+/* ---------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ligne .lettre {
+    text-shadow: none;
+  }
+  .ligne:hover .lettre,
+  .ligne:focus-visible .lettre {
+    transform: none;
+  }
+  .diapo[data-etat="precedent"] {
+    visibility: hidden;
+  }
+  .glitch__fantome {
+    display: none;
+  }
+}

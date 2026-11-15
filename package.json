@@ -1,0 +1,27 @@
+{
+  "name": "portfolio-rk",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "content": "node scripts/fetch-content.mjs && node scripts/generate-sitemap.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "build": "node scripts/fetch-content.mjs && node scripts/generate-sitemap.mjs && vite build",
+    "preview": "vite preview",
+    "test": "node test/run.mjs"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@vitejs/plugin-react": "^6.2.1",
+    "esbuild": "^0.28.2",
+    "jsdom": "^31.0.0",
+    "tailwindcss": "^4.3.5",
+    "vite": "^8.3.6"
+  }
+}

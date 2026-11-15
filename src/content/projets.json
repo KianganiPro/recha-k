@@ -1,0 +1,98 @@
+{
+  "source": "sanity",
+  "genere": "2026-11-15T04:34:56.084Z",
+  "categories": [
+    {
+      "slug": "creative-director",
+      "titre": "Creative Director"
+    },
+    {
+      "slug": "producer",
+      "titre": "Producer"
+    },
+    {
+      "slug": "designer",
+      "titre": "Designer"
+    }
+  ],
+  "projets": [
+    {
+      "slug": "efena-jewelry",
+      "titre": "Efena jewelry",
+      "couleur": "#600a25",
+      "date": "2026-11-10",
+      "mission": "Campaign for Jewelry",
+      "description": "Jewelry Campaign\nDirected by — @tedkiawete Creative Direction — @recha.jpg Featuring — @eeexauce & @mamsigoo Voice Over — @garconenprose",
+      "categories": [
+        "creative-director"
+      ],
+      "couverture": {
+        "src": "https://cdn.sanity.io/images/q58ynveq/production/9111b9ad7c7055198ef05e402b712cea7a589f51-400x357.png",
+        "alt": "Efena jewelry",
+        "lqip": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAPoAAAD6AG1e1JrAAACB0lEQVQ4jY2U209TQRCHP7Y7e0JTK2CIl/gCFqkitDaxYCg1VlACFuqFS6n6oC/GS/z/38yc/pocNEo3mZzT3ZnvzPxmpwARuAX0gE/AD+AbMAI+A7+Ar8AXnfnzI/Ad+KmYnhjO4gZQAzrAPvAKOBFwSAhnIYRhCOGcEE7zvfHZifz3FVsTiy3gCbANHAIDOb+ROeQcuNDT995qf6CYbTGcxRHwEnitr1/o3cvYA/r6wGnBd0/vI8UcFHxpAV3gGPgAnAGbmK1j1gQ2CqWtm9mGmT0Gnsp3JPgO4PvMA3Vt9OXwwswaKaW6tDmULWVZtmxmLWU0UjWe0AOx8s7MKXBHJb8nxi4p3QdWgHfSbTnLslqpVOpJhqFiaoLlXfZVAqoq70jle9AEOJCtKJOJhn3FVMW4tHxjUTp0ZJtAu6BhW53sSMOmYv6CTZanvKBMWoVMejJ/39VH78k3/gtWhM4L+lz6dWV+B59Js7lpYH9m2lR3d2UH0myqzIprBjDgtvQ6VlM6mlk/C0y5HJaA68BN4GEhQ+/6NaAii9MAvWMLKVXqZuWmT0WMsY1ZK6W0Ctwly/L7qOsyczWwUlm0crkR4+yWw/LJSGnVzB756DEev4auzJWlu0M1nxKfZQ90CCzlZrYGrDEeS/+78or+m6UfzualjafCNXRz4B0fP/32e+h6XoL9Bu+BPJbqRrVxAAAAAElFTkSuQmCC",
+        "hotspot": null
+      },
+      "liens": [],
+      "medias": [
+        {
+          "type": "video",
+          "src": "https://cdn.sanity.io/files/q58ynveq/production/c0e7a678512ed49bc64101c924bf6709437c2519.mp4",
+          "alt": "Efena jewelry — visuel 1",
+          "poster": null
+        }
+      ]
+    },
+    {
+      "slug": "wear-the-grind",
+      "titre": "Wear the grind",
+      "couleur": "#560917",
+      "date": "2025-11-05",
+      "mission": "Campaign for maison des prodiges",
+      "description": "Jewelry Campaign\nDirected by — @tedkiawete Creative Direction — @recha.jpg Featuring — @eeexauce & @mamsigoo Voice Over — @garconenprose",
+      "categories": [
+        "creative-director"
+      ],
+      "couverture": {
+        "src": "https://cdn.sanity.io/images/q58ynveq/production/318e751a965e9d8d1548bc23a883b8594c3611d1-952x1136.webp",
+        "alt": "Wear the grind",
+        "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAYABQDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAcF/8QAJRAAAgEDAwMFAQAAAAAAAAAAAQIDAAQFBhESEyFxBxUiQVHB/8QAFwEAAwEAAAAAAAAAAAAAAAAAAQIDBP/EABkRAAIDAQAAAAAAAAAAAAAAAAABAhFBIf/aAAwDAQACEQMRAD8A1sprItbXK4DGvexxArJO3xjHg/dTq0iyWJ1DjslmsdJb4+NubNGvIAH7rE0nrwYXAz4/JJNKNiIo1OysP0mtWP1Vi9odWWR7hU6fRkHJXH8p2otCJzi+FttDZ5K3S7spUlgkG6sppUK0NqLI22HkWJpI42nd1QDsoO3alTtFKZP9YSB7myEIUKLVOw8Vm4RuOXtGkTmokHJf0UpRwGlN04sstnM1vCel13C7nxSlKy2aj//Z",
+        "hotspot": null
+      },
+      "liens": [],
+      "medias": [
+        {
+          "type": "video",
+          "src": "https://cdn.sanity.io/files/q58ynveq/production/13e235debd0318d92500cacb9942646a6fc7d0eb.mp4",
+          "alt": "Wear the grind — visuel 1",
+          "poster": null
+        }
+      ]
+    },
+    {
+      "slug": "prodigio",
+      "titre": "Prodigio",
+      "couleur": "#591711",
+      "date": "2025-01-02",
+      "mission": "Campaign",
+      "description": "",
+      "categories": [
+        "designer"
+      ],
+      "couverture": {
+        "src": "https://cdn.sanity.io/images/q58ynveq/production/2dcb3aa6372818fe27d12164407817ee5a9cf142-554x554.jpg",
+        "alt": "Prodigio",
+        "lqip": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAUABQDASIAAhEBAxEB/8QAGAABAQEBAQAAAAAAAAAAAAAAAAcFBgP/xAAjEAABAwQDAQADAQAAAAAAAAABAgMEAAUGEQcSIRMUIjFh/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAIDAf/EABkRAAMBAQEAAAAAAAAAAAAAAAABAgMREv/aAAwDAQACEQMRAD8Axst5ByyLc5wj3h9DTb60BKdeAHyqLxlyBfWuMp14mNu3eY1J6JQTo9aiGaJKcin6T2BfWdb/ANqm8fRJ0zixxu1Ohh8zjsk681UdLecumVmfTSLZgeXTMix5q4TraYLq1qT8lK90P4aVzHHVtvMTHvldpSXZH2UQoHf6+aFKWd/STB58fD3u/FOLTLm7JejPfRaipWndDZrpMYw6z2G1fh25laWC4XCFK7e0pVRTeagMNo6oSQKUpWin/9k=",
+        "hotspot": null
+      },
+      "liens": [],
+      "medias": [
+        {
+          "type": "video",
+          "src": "https://cdn.sanity.io/files/q58ynveq/production/3dd006ef64054b43fcdce69343173ba50aad07f6.mp4",
+          "alt": "Campaign for maison des prodiges",
+          "poster": null
+        }
+      ]
+    }
+  ]
+}
